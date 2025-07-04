@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>STEAM-4-Schools: Knowledge Tracker</title>
+<style>
+  body {
+    font-family: sans-serif;
+    padding: 10px;
+    width: 800px;
+    height: 300px;
+    overflow-x: auto;
+  }
+
+  h1 {
+    font-size: 16px;
+    margin: 0 0 10px 0;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .info-column {
+    display: none; /* hidden by default */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  .button-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  #status {
+    font-size: 12px;
+    color: green;
+  }
+
+  #calendar {
+    display: flex;
+    gap: 2px;
+    margin-top: 10px;
+  }
+
+  .calendar-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .calendar-cell {
+    width: 12px;
+    height: 12px;
+  }
+
+  .calendar-labels {
+    display: flex;
+    justify-content: flex-start;
+    font-size: 10px;
+    margin-bottom: 2px;
+    gap: 8px;
+  }
+
+  .calendar-ylabels {
+    font-size: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 90px;
+    margin-right: 4px;
+  }
+
+  .toggle-btn {
+    font-size: 12px;
+    cursor: pointer;
+    margin-bottom: 6px;
+    background: #eee;
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+  }
+
+  button {
+    width: 200px;
+    padding: 6px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+  <h1>STEAM-4-Schools: Knowledge Tracker</h1>
+
+  <!-- Toggle Button -->
+  <button class="toggle-btn" id="toggleInfoBtn">Show Details ⬇️</button>
+
+  <!-- Info column -->
+  <div class="info-column" id="infoColumn">
+    <div id="time">⏳ Current: 0s</div>
+    <div id="dbTotal">📊 DB Total: 0s</div>
+    <div id="sinceLastUpload">🕒 Since Last Upload: N/A</div>
+  </div>
+
+  <!-- Track button -->
+  <div class="button-row">
+    <button id="trackBtn">Refresh Tracking</button>
+    <div id="status"></div>
+  </div>
+
+  <div style="margin-top:10px; font-weight:bold;">Contribution Calendar</div>
+
+  <div class="calendar-labels" id="monthLabels"></div>
+
+  <div style="display: flex;">
+    <div class="calendar-ylabels">
+      <div>Mon</div>
+      <div>Wed</div>
+      <div>Fri</div>
+    </div>
+    <div id="calendar"></div>
+  </div>
+
+  <div id="tooltip" style="
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 4px 6px;
+    font-size: 12px;
+    display: none;
+    pointer-events: none;
+    z-index: 10;
+  "></div>
+
+<script src="popup.js"></script>
+</body>
+</html>
