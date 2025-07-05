@@ -8,7 +8,7 @@
     font-family: sans-serif;
     padding: 10px;
     width: 800px;
-    height: 300px;
+    height: 500px;
     overflow-x: auto;
   }
 
@@ -19,8 +19,29 @@
     color: #333;
   }
 
+  .tab-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .tab-btn {
+    padding: 4px 8px;
+    cursor: pointer;
+    background: #eee;
+    border: 1px solid #ccc;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
   .info-column {
-    display: none; /* hidden by default */
+    display: none;
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
@@ -83,48 +104,20 @@
     padding: 4px 8px;
   }
 
-  button {
-    width: 200px;
-    padding: 6px;
-    font-size: 14px;
-    cursor: pointer;
+  #chatWindow {
+    height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 4px;
+    margin-bottom: 4px;
+    background: #f9f9f9;
   }
-</style>
-</head>
-<body>
 
-  <h1>STEAM-4-Schools: Knowledge Tracker</h1>
+  #chatInput {
+    width: calc(100% - 80px);
+  }
 
-  <!-- Toggle Button -->
-  <button class="toggle-btn" id="toggleInfoBtn">Show Details ⬇️</button>
-
-  <!-- Info column -->
-  <div class="info-column" id="infoColumn">
-    <div id="time">⏳ Current: 0s</div>
-    <div id="dbTotal">📊 DB Total: 0s</div>
-    <div id="sinceLastUpload">🕒 Since Last Upload: N/A</div>
-  </div>
-
-  <!-- Track button -->
-  <div class="button-row">
-    <button id="trackBtn">Refresh Tracking</button>
-    <div id="status"></div>
-  </div>
-
-  <div style="margin-top:10px; font-weight:bold;">Contribution Calendar</div>
-
-  <div class="calendar-labels" id="monthLabels"></div>
-
-  <div style="display: flex;">
-    <div class="calendar-ylabels">
-      <div>Mon</div>
-      <div>Wed</div>
-      <div>Fri</div>
-    </div>
-    <div id="calendar"></div>
-  </div>
-
-  <div id="tooltip" style="
+  #tooltip {
     position: absolute;
     background: white;
     border: 1px solid #ccc;
@@ -133,7 +126,59 @@
     display: none;
     pointer-events: none;
     z-index: 10;
-  "></div>
+  }
+</style>
+</head>
+<body>
+
+<h1>STEAM-4-Schools: Knowledge Tracker</h1>
+
+<div class="tab-bar">
+  <button class="tab-btn" data-tab="tracker">Tracker</button>
+  <button class="tab-btn" data-tab="chat">Chat</button>
+  <button class="tab-btn" data-tab="learn">Learn</button>
+</div>
+
+<!-- Tracker tab -->
+<div class="tab-content active" id="trackerTab">
+  <button class="toggle-btn" id="toggleInfoBtn">Show Details ⬇️</button>
+
+  <div class="info-column" id="infoColumn">
+    <div id="time">⏳ Current: 0s</div>
+    <div id="dbTotal">📊 DB Total: 0s</div>
+    <div id="sinceLastUpload">🕒 Since Last Upload: N/A</div>
+  </div>
+
+  <div class="button-row">
+    <button id="trackBtn">Refresh Tracking</button>
+    <div id="status"></div>
+  </div>
+
+  <div style="margin-top:10px; font-weight:bold;">Contribution Calendar</div>
+  <div class="calendar-labels" id="monthLabels"></div>
+  <div style="display: flex;">
+    <div class="calendar-ylabels">
+      <div>Mon</div>
+      <div>Wed</div>
+      <div>Fri</div>
+    </div>
+    <div id="calendar"></div>
+  </div>
+</div>
+
+<!-- Chat tab -->
+<div class="tab-content" id="chatTab">
+  <div id="chatWindow"></div>
+  <input type="text" id="chatInput" placeholder="Type your message…" />
+  <button id="sendChat">Send</button>
+</div>
+
+<!-- Learn tab -->
+<div class="tab-content" id="learnTab">
+  <p>Learning content coming soon…</p>
+</div>
+
+<div id="tooltip"></div>
 
 <script src="popup.js"></script>
 </body>
