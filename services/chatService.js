@@ -1,22 +1,19 @@
+import { addAIMessageStream, updateAIMessage } from '../components/ChatWindow.js';
+
 const BASE_URL = 'http://localhost:3000';
 
-/**
- * Sends a chat message to the assistant and streams the reply.
- * @param {string} message - The user message to send.
- * @param {HTMLElement} chatWindow - The chat window element where messages will appear.
- * @param {string} chatAssistantId - The ID of the chat assistant to send the message to.
- */
-export async function sendMessage(message, chatWindow, chatAssistantId = 'asst_taps76CqiH8NirfurpM0Gnc5') {
-  if (!message || !message.trim() || !chatWindow) return;
+export async function sendMessage(
+  message,
+  onMessageSent,
+  chatAssistantId = 'asst_taps76CqiH8NirfurpM0Gnc5'
+) {
+  if (!message || !message.trim()) return;
 
-  // --- Show user message immediately ---
-  const userMessageDiv = document.createElement('div');
-  userMessageDiv.style.margin = '4px 0';
-  userMessageDiv.innerHTML = `<strong>You:</strong> ${message}`;
-  chatWindow.appendChild(userMessageDiv);
-  chatWindow.scrollTop = chatWindow.scrollHeight;
+  // Show user message only via the callback — NO fallback and no "You:" prefix
+  if (typeof onMessageSent === 'function') {
+    onMessageSent({ role: 'user', content: message });
+  }
 
-  // --- Retrieve existing thread ID from Chrome storage ---
   const { chatThreadId } = await chrome.storage.local.get('chatThreadId');
 
   const body = {
@@ -37,15 +34,11 @@ export async function sendMessage(message, chatWindow, chatAssistantId = 'asst_t
       return;
     }
 
-    // --- Create AI message placeholder ---
-    let assistantMsg = '';
-    const aiMessageDiv = document.createElement('div');
-    aiMessageDiv.style.margin = '4px 0';
-    aiMessageDiv.innerHTML = `<strong>AI:</strong> `;
-    chatWindow.appendChild(aiMessageDiv);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
+    // Create empty AI message bubble
+    const aiDiv = addAIMessageStream();
+    let accumulated = '';
 
-    // --- Read and stream chunks from response ---
+    // Stream chunks into the AI bubble
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
 
@@ -54,31 +47,25 @@ export async function sendMessage(message, chatWindow, chatAssistantId = 'asst_t
       if (done) break;
 
       const chunk = decoder.decode(value, { stream: true });
-      assistantMsg += chunk;
-
-      aiMessageDiv.innerHTML = `<strong>AI:</strong> ${assistantMsg}`;
-      chatWindow.scrollTop = chatWindow.scrollHeight;
+      accumulated += chunk;
+      updateAIMessage(aiDiv, accumulated); // No "AI:" prefix
     }
 
-    // --- Save new thread ID if provided ---
-    const newThreadIdHeader = res.headers.get('x-thread-id');
-    if (newThreadIdHeader) {
-      await chrome.storage.local.set({ chatThreadId: newThreadIdHeader });
-      console.log('💾 Saved chatThreadId:', newThreadIdHeader);
+    // Save new thread ID if provided
+    const newThreadId = res.headers.get('x-thread-id');
+    if (newThreadId) {
+      await chrome.storage.local.set({ chatThreadId: newThreadId });
+      console.log('💾 Saved new thread ID:', newThreadId);
     }
   } catch (err) {
-    console.error('⚠️ Error during chat fetch:', err);
+    console.error('⚠️ Chat streaming error:', err);
   }
 }
 
-/**
- * Loads the chat history for the current thread and appends it to the chat window.
- * @param {HTMLElement} chatWindow - The chat window element where history will appear.
- */
 export async function loadChatHistory(chatWindow) {
   if (!chatWindow) return;
 
-  chatWindow.innerHTML = ''; // Clear previous content
+  chatWindow.innerHTML = '';
 
   const { chatThreadId } = await chrome.storage.local.get('chatThreadId');
   if (!chatThreadId) {
@@ -100,15 +87,14 @@ export async function loadChatHistory(chatWindow) {
 
     const data = await res.json();
     if (!Array.isArray(data.messages)) {
-      console.error('❌ Invalid chat history response format.');
+      console.error('❌ Invalid chat history format.');
       return;
     }
 
-    // --- Render previous messages ---
     for (const msg of data.messages) {
       const div = document.createElement('div');
       div.style.margin = '4px 0';
-      div.innerHTML = `<strong>${msg.role === 'user' ? 'You' : 'AI'}:</strong> ${msg.content}`;
+      div.textContent = msg.content; // No role prefix
       chatWindow.appendChild(div);
     }
 
