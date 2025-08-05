@@ -10,113 +10,100 @@
     width: 800px;
     height: 500px;
     overflow-x: auto;
+    background-color: #E1FFFF;
+    color: #00003D;
   }
 
   h1 {
     font-size: 16px;
-    margin: 0 0 10px 0;
+    margin-bottom: 10px;
     font-weight: bold;
-    color: #333;
   }
 
+  /* --- Tabs --- */
   .tab-bar {
     display: flex;
     gap: 6px;
     margin-bottom: 10px;
   }
-
   .tab-btn {
     padding: 4px 8px;
     cursor: pointer;
-    background: #eee;
-    border: 1px solid #ccc;
+    background: #fff;
+    border: 1px solid #00003D;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+  }
+  .tab-btn:hover {
+    background-color: #e0e0ff;
+  }
+  .tab-btn.active {
+    background-color: #4141FF;
+    color: white;
   }
 
+  /* --- Tab Content --- */
   .tab-content {
     display: none;
   }
-
   .tab-content.active {
     display: block;
   }
 
-  .info-column {
-    display: none;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-    font-size: 13px;
-    margin-bottom: 8px;
-  }
-
-  .button-row {
+  /* --- Calendar Layout --- */
+  #calendarContainer {
     display: flex;
-    align-items: center;
     gap: 8px;
-    margin-bottom: 8px;
-  }
-
-  #status {
-    font-size: 12px;
-    color: green;
-  }
-
-  #calendar {
-    display: flex;
-    gap: 2px;
     margin-top: 10px;
   }
 
+  /* Month labels */
+  #monthLabels {
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+    margin-left: 26px;
+  }
+  .calendar-month-label,
+  .calendar-empty-label {
+    width: 12px;
+    font-size: 10px;
+    text-align: center;
+  }
+
+  /* Week columns */
+  #calendar {
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+  }
   .calendar-column {
     display: flex;
     flex-direction: column;
     gap: 2px;
   }
 
+  /* Days */
   .calendar-cell {
     width: 12px;
     height: 12px;
   }
-
-  .calendar-labels {
-    display: flex;
-    justify-content: flex-start;
-    font-size: 10px;
-    margin-bottom: 2px;
-    gap: 8px;
+  .calendar-cell-empty {
+    background-color: #fff;
+    border: 1px solid #eee;
   }
 
+  /* Day labels */
   .calendar-ylabels {
     font-size: 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 90px;
+    height: calc(12px * 7 + 12px); /* 7 days + gap space */
     margin-right: 4px;
   }
 
-  .toggle-btn {
-    font-size: 12px;
-    cursor: pointer;
-    margin-bottom: 6px;
-    background: #eee;
-    border: 1px solid #ccc;
-    padding: 4px 8px;
-  }
-
-  #chatWindow {
-    height: 150px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    padding: 4px;
-    margin-bottom: 4px;
-    background: #f9f9f9;
-  }
-
-  #chatInput {
-    width: calc(100% - 80px);
-  }
-
+  /* --- Tooltip --- */
   #tooltip {
     position: absolute;
     background: white;
@@ -127,59 +114,58 @@
     pointer-events: none;
     z-index: 10;
   }
+
+  /* --- Chat --- */
+  #chatWindow {
+    height: 150px;
+    overflow-y: auto;
+    border: 1px solid #00003D;
+    padding: 6px;
+    background: #fff;
+    margin-bottom: 6px;
+  }
 </style>
 </head>
 <body>
 
 <h1>STEAM-4-Schools: Knowledge Tracker</h1>
 
-<div class="tab-bar">
-  <button class="tab-btn" data-tab="tracker">Tracker</button>
-  <button class="tab-btn" data-tab="chat">Chat</button>
-  <button class="tab-btn" data-tab="learn">Learn</button>
-</div>
+<!-- Tabs -->
+<div class="tab-bar" id="tabBar"></div>
 
-<!-- Tracker tab -->
+<!-- Tracker Tab -->
 <div class="tab-content active" id="trackerTab">
-  <button class="toggle-btn" id="toggleInfoBtn">Show Details ⬇️</button>
+  <!-- Tracking stats -->
+  <div id="trackingPanel"></div>
 
-  <div class="info-column" id="infoColumn">
-    <div id="time">⏳ Current: 0s</div>
-    <div id="dbTotal">📊 DB Total: 0s</div>
-    <div id="sinceLastUpload">🕒 Since Last Upload: N/A</div>
-  </div>
-
-  <div class="button-row">
-    <button id="trackBtn">Refresh Tracking</button>
-    <div id="status"></div>
-  </div>
-
-  <div style="margin-top:10px; font-weight:bold;">Contribution Calendar</div>
-  <div class="calendar-labels" id="monthLabels"></div>
-  <div style="display: flex;">
+  <!-- Calendar Labels & Grid -->
+  <div id="monthLabels"></div>
+  <div id="calendarContainer">
+    <!-- Day labels -->
     <div class="calendar-ylabels">
       <div>Mon</div>
       <div>Wed</div>
       <div>Fri</div>
     </div>
+    <!-- Calendar grid -->
     <div id="calendar"></div>
   </div>
 </div>
 
-<!-- Chat tab -->
+<!-- Chat Tab -->
 <div class="tab-content" id="chatTab">
   <div id="chatWindow"></div>
-  <input type="text" id="chatInput" placeholder="Type your message…" />
-  <button id="sendChat">Send</button>
+  <div id="chatInputContainer"></div>
 </div>
 
-<!-- Learn tab -->
+<!-- Learn Tab -->
 <div class="tab-content" id="learnTab">
   <p>Learning content coming soon…</p>
 </div>
 
+<!-- Tooltip -->
 <div id="tooltip"></div>
 
-<script src="popup.js"></script>
+<script type="module" src="popup.js"></script>
 </body>
 </html>
