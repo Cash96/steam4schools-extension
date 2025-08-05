@@ -1,4 +1,4 @@
-const BASE_URL = 'http://192.168.1.104:3000';
+const BASE_URL = 'http://localhost:3000';
 
 /**
  * Sends a chat message to the assistant and streams the reply.

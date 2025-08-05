@@ -1,5 +1,5 @@
 // services/calendarService.js
-const BASE_URL = 'http://192.168.1.104:3000';
+const BASE_URL = 'http://localhost:3000';
 
 export async function fetchAndRenderCalendarData() {
   const res = await fetch(`${BASE_URL}/api/tracking/records`);
