@@ -1,77 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>STEAM-4-Schools: Knowledge Tracker</title>
 <style>
-  body {
+  html, body {
+    width: 800px;   /* fixed size */
+    height: 400px;
+    margin: 0;
+    padding: 0;
+    background: #e1ffff;
     font-family: sans-serif;
-    padding: 10px;
-    width: 800px;
-    height: 500px;
-    overflow-x: auto;
-    background-color: #E1FFFF;
-    color: #00003D;
+    color: #00003d;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* no outer scrollbar */
   }
 
   h1 {
     font-size: 16px;
-    margin-bottom: 10px;
     font-weight: bold;
+    margin: 8px;
+    flex-shrink: 0;
   }
 
-  /* --- Tabs --- */
   .tab-bar {
     display: flex;
     gap: 6px;
-    margin-bottom: 10px;
+    padding: 0 8px 8px;
+    flex-shrink: 0;
   }
   .tab-btn {
     padding: 4px 8px;
     cursor: pointer;
     background: #fff;
-    border: 1px solid #00003D;
+    border: 1px solid #00003d;
     border-radius: 4px;
-    transition: background 0.2s ease;
-  }
-  .tab-btn:hover {
-    background-color: #e0e0ff;
   }
   .tab-btn.active {
-    background-color: #4141FF;
+    background: #4141ff;
     color: white;
   }
 
-  /* --- Tab Content --- */
   .tab-content {
     display: none;
+    flex: 1;
+    min-height: 0; /* important: no overflow push */
+    padding: 0 8px 8px;
   }
   .tab-content.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
   }
 
-  /* --- Calendar Layout --- */
+  /* Tracker Tab */
+  #trackerTab {
+    overflow: hidden;
+  }
   #calendarContainer {
     display: flex;
     gap: 8px;
-    margin-top: 10px;
+    margin-top: 8px;
+    flex-shrink: 0;
   }
-
-  /* Month labels */
   #monthLabels {
     display: flex;
     flex-direction: row;
     gap: 2px;
     margin-left: 26px;
   }
-  .calendar-month-label,
-  .calendar-empty-label {
+  .calendar-month-label, .calendar-empty-label {
     width: 12px;
     font-size: 10px;
     text-align: center;
   }
-
-  /* Week columns */
   #calendar {
     display: flex;
     flex-direction: row;
@@ -82,47 +84,39 @@
     flex-direction: column;
     gap: 2px;
   }
-
-  /* Days */
   .calendar-cell {
     width: 12px;
     height: 12px;
   }
   .calendar-cell-empty {
-    background-color: #fff;
+    background: #fff;
     border: 1px solid #eee;
   }
-
-  /* Day labels */
   .calendar-ylabels {
     font-size: 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: calc(12px * 7 + 12px); /* 7 days + gap space */
+    height: calc(12px * 7 + 12px);
     margin-right: 4px;
   }
 
-  /* --- Tooltip --- */
-  #tooltip {
-    position: absolute;
-    background: white;
-    border: 1px solid #ccc;
-    padding: 4px 6px;
-    font-size: 12px;
-    display: none;
-    pointer-events: none;
-    z-index: 10;
+  /* Chat Tab */
+  #chatTab {
+    overflow: hidden;
   }
-
-  /* --- Chat --- */
   #chatWindow {
-    height: 150px;
+    flex: 1;
+    min-height: 0; /* this + flex keeps it inside */
     overflow-y: auto;
-    border: 1px solid #00003D;
-    padding: 6px;
+    border: 1px solid #00003d;
     background: #fff;
-    margin-bottom: 6px;
+    border-radius: 4px;
+    padding: 6px;
+  }
+  #chatInputContainer {
+    flex-shrink: 0;
+    margin-top: 6px;
   }
 </style>
 </head>
@@ -130,40 +124,30 @@
 
 <h1>STEAM-4-Schools: Knowledge Tracker</h1>
 
-<!-- Tabs -->
 <div class="tab-bar" id="tabBar"></div>
 
-<!-- Tracker Tab -->
 <div class="tab-content active" id="trackerTab">
-  <!-- Tracking stats -->
   <div id="trackingPanel"></div>
-
-  <!-- Calendar Labels & Grid -->
   <div id="monthLabels"></div>
   <div id="calendarContainer">
-    <!-- Day labels -->
     <div class="calendar-ylabels">
       <div>Mon</div>
       <div>Wed</div>
       <div>Fri</div>
     </div>
-    <!-- Calendar grid -->
     <div id="calendar"></div>
   </div>
 </div>
 
-<!-- Chat Tab -->
 <div class="tab-content" id="chatTab">
   <div id="chatWindow"></div>
   <div id="chatInputContainer"></div>
 </div>
 
-<!-- Learn Tab -->
 <div class="tab-content" id="learnTab">
   <p>Learning content coming soon…</p>
 </div>
 
-<!-- Tooltip -->
 <div id="tooltip"></div>
 
 <script type="module" src="popup.js"></script>

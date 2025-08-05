@@ -6,7 +6,7 @@ export function initChatInput(containerId = 'chatInputContainer') {
   if (!container) return;
 
   container.innerHTML = `
-    <div style="display:flex;gap:8px;margin-top:8px;background:#FFFFFF;border:1px solid rgba(0,0,61,0.2);border-radius:8px;padding:8px;">
+    <div style="display:flex;gap:8px;background:#FFFFFF;border:1px solid rgba(0,0,61,0.2);border-radius:8px;padding:8px;">
       <textarea
         id="chatInput"
         placeholder="Type your message..."
