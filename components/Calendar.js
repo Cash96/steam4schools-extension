@@ -13,6 +13,7 @@ export function initCalendar(calendarPanel = 'calendar', monthLabelsId = 'monthL
 
   fetchAndRenderCalendarData()
     .then((contributions) => {
+      console.log('Data received by renderCalendar:', contributions); 
       renderCalendar(contributions, calendarDiv, monthLabelsDiv, tooltip);
     })
     .catch((err) => {

@@ -2,7 +2,7 @@
 const BASE_URL = 'http://localhost:3000';
 
 export async function fetchAndRenderCalendarData() {
-  const res = await fetch(`${BASE_URL}/api/tracking/records`);
+  const res = await fetch(`${BASE_URL}/api/tracking/records`, { credentials: 'include' });
   if (!res.ok) throw new Error(`Failed to fetch calendar data: ${res.status}`);
   const data = await res.json();
 

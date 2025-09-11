@@ -2,15 +2,14 @@ export function initChatWindow(containerId = "chatWindow") {
   const chatWindow = document.getElementById(containerId);
   if (!chatWindow) return;
 
-  chatWindow.innerHTML = "";
   chatWindow.style.flex = "1";
-  chatWindow.style.minHeight = "0";
+  chatWindow.style.minHeight = "0"; // ✅ required
   chatWindow.style.overflowY = "auto";
   chatWindow.style.display = "flex";
   chatWindow.style.flexDirection = "column";
   chatWindow.style.gap = "8px";
-  chatWindow.style.padding = "12px";
   chatWindow.style.background = "#E1FFFF";
+  chatWindow.style.boxSizing = "border-box"; // ✅ ensures padding doesn't push it out
 }
 
 export function addUserMessage(content) {

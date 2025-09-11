@@ -8,30 +8,30 @@
     "activeTab",
     "scripting",
     "idle",
-    "storage"
+    "storage",
+    "webNavigation",
+    "cookies"
   ],
   "host_permissions": [
-    "<all_urls>"
+    "http://localhost:3000/*",
+    "https://your-production-website.com/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "icons/icon.png",
-      "48": "icons/icon.png",
-      "128": "icons/icon.png"
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
     }
   },
   "content_scripts": [
     {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "content.js"
-      ],
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
       "run_at": "document_idle"
     }
   ]

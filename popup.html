@@ -1,155 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<title>STEAM-4-Schools: Knowledge Tracker</title>
-<style>
-  html, body {
-    width: 800px;   /* fixed size */
-    height: 400px;
-    margin: 0;
-    padding: 0;
-    background: #e1ffff;
-    font-family: sans-serif;
-    color: #00003d;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; /* no outer scrollbar */
-  }
+  <meta charset="UTF-8" />
+  <title>Agentic Academy: Knowledge Tracker</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Keep a fixed size for the extension popup */
+    html,
+    body {
+      width: 600px;
+      height: 400px;
+      overflow: hidden;
+    }
 
-  h1 {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 8px;
-    flex-shrink: 0;
-  }
+    .calendar-column {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
 
-  .tab-bar {
-    display: flex;
-    gap: 6px;
-    padding: 0 8px 8px;
-    flex-shrink: 0;
-  }
-  .tab-btn {
-    padding: 4px 8px;
-    cursor: pointer;
-    background: #fff;
-    border: 1px solid #00003d;
-    border-radius: 4px;
-  }
-  .tab-btn.active {
-    background: #4141ff;
-    color: white;
-  }
+    .calendar-cell {
+      width: 12px;
+      height: 12px;
+      background-color: #ebedf0;
+      /* Default color */
+      border: 1px solid rgba(27, 31, 35, 0.06);
+      border-radius: 2px;
+    }
 
-  .tab-content {
-    display: none;
-    flex: 1;
-    min-height: 0; /* important: no overflow push */
-    padding: 0 8px 8px;
-  }
-  .tab-content.active {
-    display: flex;
-    flex-direction: column;
-  }
+    .calendar-cell-empty {
+      background-color: transparent;
+      border: none;
+    }
 
-  /* Tracker Tab */
-  #trackerTab {
-    overflow: hidden;
-  }
-  #calendarContainer {
-    display: flex;
-    gap: 8px;
-    margin-top: 8px;
-    flex-shrink: 0;
-  }
-  #monthLabels {
-    display: flex;
-    flex-direction: row;
-    gap: 2px;
-    margin-left: 26px;
-  }
-  .calendar-month-label, .calendar-empty-label {
-    width: 12px;
-    font-size: 10px;
-    text-align: center;
-  }
-  #calendar {
-    display: flex;
-    flex-direction: row;
-    gap: 2px;
-  }
-  .calendar-column {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .calendar-cell {
-    width: 12px;
-    height: 12px;
-  }
-  .calendar-cell-empty {
-    background: #fff;
-    border: 1px solid #eee;
-  }
-  .calendar-ylabels {
-    font-size: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: calc(12px * 7 + 12px);
-    margin-right: 4px;
-  }
-
-  /* Chat Tab */
-  #chatTab {
-    overflow: hidden;
-  }
-  #chatWindow {
-    flex: 1;
-    min-height: 0; /* this + flex keeps it inside */
-    overflow-y: auto;
-    border: 1px solid #00003d;
-    background: #fff;
-    border-radius: 4px;
-    padding: 6px;
-  }
-  #chatInputContainer {
-    flex-shrink: 0;
-    margin-top: 6px;
-  }
-</style>
+    .calendar-month-label {
+      font-size: 10px;
+      text-align: center;
+    }
+  </style>
 </head>
-<body>
 
-<h1>STEAM-4-Schools: Knowledge Tracker</h1>
+<body class="d-flex flex-column bg-white rounded">
 
-<div class="tab-bar" id="tabBar"></div>
-
-<div class="tab-content active" id="trackerTab">
-  <div id="trackingPanel"></div>
-  <div id="monthLabels"></div>
-  <div id="calendarContainer">
-    <div class="calendar-ylabels">
-      <div>Mon</div>
-      <div>Wed</div>
-      <div>Fri</div>
+  <div id="login-view" class="container p-4 d-flex flex-column justify-content-center align-items-center h-100">
+    <h3 class="text-center mb-3">Agentic Academy</h3>
+    <p class="text-muted">Please log in to track your knowledge.</p>
+    <div class="d-grid col-6 mx-auto">
+      <button id="login-button" class="btn btn-primary">Login on Website</button>
     </div>
-    <div id="calendar"></div>
   </div>
-</div>
 
-<div class="tab-content" id="chatTab">
-  <div id="chatWindow"></div>
-  <div id="chatInputContainer"></div>
-</div>
+  <div id="app-view" class="d-flex flex-column h-100 p-2" style="display: none;">
+    <div class="d-flex justify-content-between align-items-center">
+      <h1 class="h5 mb-0" id="e-header">Knowledge Tracker</h1>
+      <button id="logout-button" class="btn btn-sm btn-outline-secondary">Logout</button>
+    </div>
 
-<div class="tab-content" id="learnTab">
-  <p>Learning content coming soon…</p>
-</div>
+    <ul class="nav nav-pills my-2 gap-2" id="tabBar" role="tablist"></ul>
 
-<div id="tooltip"></div>
+    <div class="tab-content flex-grow-1 d-flex flex-column" style="min-height: 0;">
+      <div class="tab-pane fade show active h-100" id="trackerTab" role="tabpanel">
+        <div id="trackingPanel"></div>
+        <div id="monthLabels" class="d-flex gap-1" style="margin-left: 26px;"></div>
+        <div id="calendarContainer" class="d-flex gap-2 mt-1">
+          <div class="d-flex flex-column justify-content-between" style="font-size: 10px;">
+            <span>Mon</span><span>Wed</span><span>Fri</span>
+          </div>
+          <div id="calendar" class="d-flex gap-1"></div>
+        </div>
+      </div>
 
-<script type="module" src="popup.js"></script>
+      <div class="tab-pane fade h-100 d-flex flex-column" id="chatTab" role="tabpanel" style="min-height: 0;">
+        <div id="chatWindow" class="flex-grow-1 border rounded p-2 overflow-y-auto bg-white" style="min-height: 0;">
+        </div>
+        <div id="chatInputContainer" class="mt-2"></div>
+      </div>
+
+      <div class="tab-pane fade" id="learnTab" role="tabpanel">
+        <p>Learning content coming soon…</p>
+      </div>
+    </div>
+    <div id="tooltip"></div>
+  </div>
+
+  <script type="module" src="popup.js"></script>
 </body>
+
 </html>
